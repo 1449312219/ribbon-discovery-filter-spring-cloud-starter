@@ -19,8 +19,6 @@ import com.netflix.loadbalancer.AbstractServerPredicate;
 import com.netflix.loadbalancer.PredicateKey;
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
 
-import javax.annotation.Nullable;
-
 /**
  * A template method predicate to be applied to service discovered server instances. The concreate implementation of
  * this class need to implement the {@link #apply(DiscoveryEnabledServer)} method.
@@ -33,7 +31,7 @@ public abstract class DiscoveryEnabledPredicate extends AbstractServerPredicate 
      * {@inheritDoc}
      */
     @Override
-    public boolean apply(@Nullable PredicateKey input) {
+    public boolean apply(PredicateKey input) {
         return input != null
                 && input.getServer() instanceof DiscoveryEnabledServer
                 && apply((DiscoveryEnabledServer) input.getServer());
