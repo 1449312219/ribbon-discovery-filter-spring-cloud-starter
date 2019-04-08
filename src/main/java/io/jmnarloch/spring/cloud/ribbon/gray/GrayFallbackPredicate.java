@@ -21,7 +21,7 @@ public class GrayFallbackPredicate extends MetadataAwarePredicate {
     }
 
     private boolean isEquals(String actualRegion, Constant.Region expectedRegion) {
-        return StringUtils.isNotEmpty(actualRegion) && expectedRegion.name().equalsIgnoreCase(actualRegion);
+        return StringUtils.isNotEmpty(actualRegion) && expectedRegion.name().equals(actualRegion);
     }
 
 }

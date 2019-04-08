@@ -27,8 +27,8 @@ public class ContextFilter implements Filter {
 
         String region = targetRequest.getHeader(Constant.REGION);
 
-        if (StringUtils.isEmpty(request)) {
-            region = Constant.Region.PRDT.name();
+        if (StringUtils.isEmpty(region)) {
+            region = Constant.Region.PRDT.name().toLowerCase();
         }
 
         RibbonFilterContextHolder.getCurrentContext().add(Constant.REGION, region);
