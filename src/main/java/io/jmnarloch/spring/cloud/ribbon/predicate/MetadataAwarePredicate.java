@@ -22,9 +22,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.util.CollectionUtils;
+
 /**
- * A default implementation of {@link DiscoveryEnabledServer} that matches the instance against the attributes
- * registered through
+ * A default implementation of {@link DiscoveryEnabledServer} that matches the
+ * instance against the attributes registered through
  *
  * @author Jakub Narloch
  * @see DiscoveryEnabledPredicate
@@ -38,10 +40,15 @@ public class MetadataAwarePredicate extends DiscoveryEnabledPredicate {
     protected boolean apply(DiscoveryEnabledServer server) {
         return hasAllAttributes(server, RibbonFilterContextHolder.getCurrentContext().getAttributes());
     }
-    
+
     protected boolean hasAllAttributes(DiscoveryEnabledServer server, Map<String, String> attributes) {
         final Set<Map.Entry<String, String>> attributesEntry = Collections.unmodifiableSet(attributes.entrySet());
         final Map<String, String> metadata = server.getInstanceInfo().getMetadata();
+
+        if (CollectionUtils.isEmpty(attributesEntry)) {
+            return false;
+        }
+
         return metadata.entrySet().containsAll(attributesEntry);
     }
 }

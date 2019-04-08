@@ -1,5 +1,7 @@
 package io.jmnarloch.spring.cloud.ribbon.gray;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -9,8 +11,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.Hystrix;
+
 import feign.Feign;
 import io.jmnarloch.spring.cloud.ribbon.support.RibbonDiscoveryRuleAutoConfiguration;
+import io.jmnarloch.spring.cloud.ribbon.support.RibbonFilterContextHolder;
 
 @Configuration
 @AutoConfigureBefore(RibbonDiscoveryRuleAutoConfiguration.class)
@@ -45,5 +50,15 @@ public class GrayAutoConfiguration {
     @ConditionalOnClass(Feign.class)
     public FeignStrategyInterceptor feignStrategyInterceptor() {
         return new FeignStrategyInterceptor();
+    }
+
+    @Configuration
+    @ConditionalOnClass(Hystrix.class)
+    public static class HystrixConfiguration {
+        @PostConstruct
+        void setContextHolderAdapter() {
+            RibbonFilterContextHolder
+                    .setRibbonFilterContextHolderAdapter(new HystrixRibbonFilterContextHolderAdapter());
+        }
     }
 }

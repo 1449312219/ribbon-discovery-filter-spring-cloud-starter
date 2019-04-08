@@ -15,6 +15,8 @@
  */
 package io.jmnarloch.spring.cloud.ribbon.support;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import io.jmnarloch.spring.cloud.ribbon.api.RibbonFilterContext;
 
 /**
@@ -23,16 +25,15 @@ import io.jmnarloch.spring.cloud.ribbon.api.RibbonFilterContext;
  * @author Jakub Narloch
  */
 public class RibbonFilterContextHolder {
+    private static final AtomicBoolean ADAPTER_CHANGEED = new AtomicBoolean(false);
 
-    /**
-     * Stores the {@link RibbonFilterContext} for current thread.
-     */
-    private static final ThreadLocal<RibbonFilterContext> contextHolder = new InheritableThreadLocal<RibbonFilterContext>() {
-        @Override
-        protected RibbonFilterContext initialValue() {
-            return new DefaultRibbonFilterContext();
+    private static RibbonFilterContextHolderAdapter adapter = new DefaultRibbonFilterContextHolderAdapter();
+
+    public static void setRibbonFilterContextHolderAdapter(RibbonFilterContextHolderAdapter adapter) {
+        if (ADAPTER_CHANGEED.compareAndSet(false, true)) {
+            RibbonFilterContextHolder.adapter = adapter;
         }
-    };
+    }
 
     /**
      * Retrieves the current thread bound instance of {@link RibbonFilterContext}.
@@ -40,13 +41,14 @@ public class RibbonFilterContextHolder {
      * @return the current context
      */
     public static RibbonFilterContext getCurrentContext() {
-        return contextHolder.get();
+        ADAPTER_CHANGEED.set(true);
+        return adapter.getCurrentContext();
     }
 
     /**
      * Clears the current context.
      */
     public static void clearCurrentContext() {
-        contextHolder.remove();
+        adapter.clearCurrentContext();
     }
 }
