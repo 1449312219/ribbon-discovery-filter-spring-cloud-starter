@@ -10,6 +10,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.util.StringUtils;
+
 import io.jmnarloch.spring.cloud.ribbon.support.RibbonFilterContextHolder;
 
 public class ContextFilter implements Filter {
@@ -19,10 +21,15 @@ public class ContextFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         HttpServletRequest targetRequest = (HttpServletRequest) request;
 
         String region = targetRequest.getHeader(Constant.REGION);
+
+        if (StringUtils.isEmpty(request)) {
+            region = Constant.Region.PRDT.name();
+        }
 
         RibbonFilterContextHolder.getCurrentContext().add(Constant.REGION, region);
 

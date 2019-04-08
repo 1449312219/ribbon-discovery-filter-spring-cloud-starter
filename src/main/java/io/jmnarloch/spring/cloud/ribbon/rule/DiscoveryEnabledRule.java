@@ -60,7 +60,7 @@ public abstract class DiscoveryEnabledRule extends PredicateBasedRule {
      * @param availabilityPredicate     the availability predicate
      * @return the composite predicate
      */
-    private CompositePredicate createCompositePredicate(DiscoveryEnabledPredicate discoveryEnabledPredicate, AvailabilityPredicate availabilityPredicate) {
+    protected CompositePredicate createCompositePredicate(DiscoveryEnabledPredicate discoveryEnabledPredicate, AvailabilityPredicate availabilityPredicate) {
         return CompositePredicate.withPredicates(discoveryEnabledPredicate, availabilityPredicate)
                 .build();
     }
