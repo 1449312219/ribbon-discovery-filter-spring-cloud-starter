@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.jmnarloch.spring.cloud.ribbon.support.RibbonDiscoveryRuleAutoConfiguration
+io.jmnarloch.spring.cloud.ribbon.support.RibbonDiscoveryRuleAutoConfiguration,\
+io.jmnarloch.spring.cloud.ribbon.gray.GrayAutoConfiguration
