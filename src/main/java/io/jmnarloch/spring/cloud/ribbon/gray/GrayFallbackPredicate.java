@@ -1,5 +1,8 @@
 package io.jmnarloch.spring.cloud.ribbon.gray;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
@@ -13,8 +16,11 @@ public class GrayFallbackPredicate extends MetadataAwarePredicate {
         String requestRegion = RibbonFilterContextHolder.getCurrentContext().get(Constant.REGION);
 
         if (isEquals(requestRegion, Constant.Region.GRAY)) {
-            String serverRegion = server.getInstanceInfo().getMetadata().get(Constant.REGION);
-            return isEquals(serverRegion, Constant.Region.PRDT);
+            Map<String, String> attributes = new HashMap<String, String>(
+                    RibbonFilterContextHolder.getCurrentContext().getAttributes());
+            attributes.put(Constant.REGION, Constant.Region.PRDT.name());
+            
+            return hasAllAttributes(server, attributes);
         }
 
         return false;

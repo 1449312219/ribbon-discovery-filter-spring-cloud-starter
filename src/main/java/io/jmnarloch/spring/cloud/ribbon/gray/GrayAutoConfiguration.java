@@ -27,8 +27,8 @@ public class GrayAutoConfiguration {
     }
 
     @Bean
-    public RegionController regionController() {
-        return new RegionController();
+    public GrayController grayController() {
+        return new GrayController();
     }
 
     @Bean

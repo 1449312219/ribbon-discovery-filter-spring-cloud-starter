@@ -16,7 +16,6 @@
 package io.jmnarloch.spring.cloud.ribbon.predicate;
 
 import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
-import io.jmnarloch.spring.cloud.ribbon.api.RibbonFilterContext;
 import io.jmnarloch.spring.cloud.ribbon.support.RibbonFilterContextHolder;
 
 import java.util.Collections;
@@ -37,10 +36,12 @@ public class MetadataAwarePredicate extends DiscoveryEnabledPredicate {
      */
     @Override
     protected boolean apply(DiscoveryEnabledServer server) {
-
-        final RibbonFilterContext context = RibbonFilterContextHolder.getCurrentContext();
-        final Set<Map.Entry<String, String>> attributes = Collections.unmodifiableSet(context.getAttributes().entrySet());
+        return hasAllAttributes(server, RibbonFilterContextHolder.getCurrentContext().getAttributes());
+    }
+    
+    protected boolean hasAllAttributes(DiscoveryEnabledServer server, Map<String, String> attributes) {
+        final Set<Map.Entry<String, String>> attributesEntry = Collections.unmodifiableSet(attributes.entrySet());
         final Map<String, String> metadata = server.getInstanceInfo().getMetadata();
-        return metadata.entrySet().containsAll(attributes);
+        return metadata.entrySet().containsAll(attributesEntry);
     }
 }
