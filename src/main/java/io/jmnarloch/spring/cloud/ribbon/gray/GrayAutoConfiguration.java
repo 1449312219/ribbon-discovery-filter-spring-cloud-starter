@@ -46,10 +46,13 @@ public class GrayAutoConfiguration {
         return registration;
     }
 
-    @Bean
+    @Configuration
     @ConditionalOnClass(Feign.class)
-    public FeignStrategyInterceptor feignStrategyInterceptor() {
-        return new FeignStrategyInterceptor();
+    public class FeginConfiguration {
+        @Bean
+        public FeignStrategyInterceptor feignStrategyInterceptor() {
+            return new FeignStrategyInterceptor();
+        }
     }
 
     @Configuration
